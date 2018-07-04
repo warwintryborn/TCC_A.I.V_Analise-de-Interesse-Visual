@@ -1,0 +1,100 @@
+2015-11-16 01:57:02-0500 [-] Log opened.
+2015-11-16 01:57:02-0500 [-] WebSocketServerFactory starting on 9000
+2015-11-16 01:57:02-0500 [-] Starting factory <autobahn.twisted.websocket.WebSocketServerFactory object at 0x1133e6610>
+2015-11-16 01:57:04-0500 [OpenFaceServerProtocol,0,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/log.py", line 101, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/log.py", line 84, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/selectreactor.py", line 149, in _doReadOrWrite
+	    why = getattr(selectable, method)()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/tcp.py", line 209, in doRead
+	    return self._dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/tcp.py", line 215, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/twisted/websocket.py", line 135, in dataReceived
+	    self._dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 1315, in _dataReceived
+	    self.consumeData()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 1347, in consumeData
+	    self.processHandshake()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 2899, in processHandshake
+	    self.dropConnection(abort=False)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 981, in dropConnection
+	    txaio.resolve(self.is_closed, self)
+	exceptions.AttributeError: 'OpenFaceServerProtocol' object has no attribute 'is_closed'
+	
+2015-11-16 01:57:04-0500 [-] Connection to/from tcp4:127.0.0.1:54805 lost (<type 'exceptions.AttributeError'>): 'OpenFaceServerProtocol' object has no attribute 'is_closed')
+2015-11-16 01:57:04-0500 [-] WebSocket connection closed: connection was closed uncleanly (None)
+2015-11-16 01:57:04-0500 [OpenFaceServerProtocol,1,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/log.py", line 101, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/log.py", line 84, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/selectreactor.py", line 149, in _doReadOrWrite
+	    why = getattr(selectable, method)()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/tcp.py", line 209, in doRead
+	    return self._dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/tcp.py", line 215, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/twisted/websocket.py", line 135, in dataReceived
+	    self._dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 1315, in _dataReceived
+	    self.consumeData()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 1347, in consumeData
+	    self.processHandshake()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 2899, in processHandshake
+	    self.dropConnection(abort=False)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 981, in dropConnection
+	    txaio.resolve(self.is_closed, self)
+	exceptions.AttributeError: 'OpenFaceServerProtocol' object has no attribute 'is_closed'
+	
+2015-11-16 01:57:04-0500 [-] Connection to/from tcp4:127.0.0.1:54806 lost (<type 'exceptions.AttributeError'>): 'OpenFaceServerProtocol' object has no attribute 'is_closed')
+2015-11-16 01:57:04-0500 [-] WebSocket connection closed: connection was closed uncleanly (None)
+2015-11-16 01:57:04-0500 [OpenFaceServerProtocol,2,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/log.py", line 101, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/log.py", line 84, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/selectreactor.py", line 149, in _doReadOrWrite
+	    why = getattr(selectable, method)()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/tcp.py", line 209, in doRead
+	    return self._dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/twisted/internet/tcp.py", line 215, in _dataReceived
+	    rval = self.protocol.dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/twisted/websocket.py", line 135, in dataReceived
+	    self._dataReceived(data)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 1315, in _dataReceived
+	    self.consumeData()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 1347, in consumeData
+	    self.processHandshake()
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 2899, in processHandshake
+	    self.dropConnection(abort=False)
+	  File "/Users/aub3/portenv/lib/python2.7/site-packages/autobahn/websocket/protocol.py", line 981, in dropConnection
+	    txaio.resolve(self.is_closed, self)
+	exceptions.AttributeError: 'OpenFaceServerProtocol' object has no attribute 'is_closed'
+	
+2015-11-16 01:57:04-0500 [-] Connection to/from tcp4:127.0.0.1:54808 lost (<type 'exceptions.AttributeError'>): 'OpenFaceServerProtocol' object has no attribute 'is_closed')
+2015-11-16 01:57:04-0500 [-] WebSocket connection closed: connection was closed uncleanly (None)
+2015-11-16 01:57:07-0500 [-] Received SIGINT, shutting down.
+2015-11-16 01:57:07-0500 [autobahn.twisted.websocket.WebSocketServerFactory] (TCP Port 9000 Closed)
+2015-11-16 01:57:07-0500 [-] Stopping factory <autobahn.twisted.websocket.WebSocketServerFactory object at 0x1133e6610>
+2015-11-16 01:57:07-0500 [-] Main loop terminated.
