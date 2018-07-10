@@ -35,12 +35,12 @@ class LandMark():
             OLHO_DIREITO = shape[64];
             
             self.__face =  np.array([
-                            NARIZ,     # Nose tip
-                            QUEIXO,     # Chin
-                            OLHO_ESQUERDO,     # Left eye left corner
-                            OLHO_DIREITO,     # Right eye right corne
-                            BOCA_ESQUERDO,     # Left Mouth corner
-                            BOCA_DIREITO      # Right mouth corner
+                            NARIZ,              # Nose tip
+                            QUEIXO,             # Chin
+                            OLHO_ESQUERDO,      # Left eye left corner
+                            OLHO_DIREITO,       # Right eye right corne
+                            BOCA_ESQUERDO,      # Left Mouth corner
+                            BOCA_DIREITO        # Right mouth corner
                         ], dtype="double")
     
             self.__mapa.append(self.face);
