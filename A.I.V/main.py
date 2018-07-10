@@ -4,6 +4,7 @@ import imutils
 import time
 import cv2
 import land_mark
+import head_pose
  
 # construct the argument parse and parse the arguments
 #ap = argparse.ArgumentParser()
@@ -12,18 +13,13 @@ import land_mark
 #ap.add_argument("-r", "--picamera", type=int, default=-1,
 #	help="whether or not the Raspberry Pi camera should be used")
 #args = vars(ap.parse_args())
- 
-# initialize dlib's face detector (HOG-based) and then create
-# the facial landmark predictor
-#print("[INFO] loading facial landmark predictor...")
-#detector = dlib.get_frontal_face_detector()
-#predictor = dlib.shape_predictor("./face_predictor/shape_predictor_68_face_landmarks.dat")
 
 # initialize the video stream and allow the cammera sensor to warmup
 print("[INFO] camera sensor warming up...")
 vs = VideoStream(1).start()
 time.sleep(2.0)
 lm = land_mark.LandMark();
+hp = head_pose.HeadPose(cv2);
 
 # loop over the frames from the video stream
 while True:
@@ -35,9 +31,12 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     lm.setVideo(gray);
+    hp.setVideo(gray);
     
     mapa = lm.getLandMark();
     
+    points = hp.getLinePoints(lm.getFace);
+     
     # loop over the (x, y)-coordinates for the facial landmarks
     # and draw them on the image
     for face in mapa:  
@@ -45,7 +44,9 @@ while True:
             x = mark[0]
             y = mark[1]
             cv2.circle(frame, (int(x),int(y)), 2, (0, 0, 255), -1)
-	  
+            
+    cv2.arrowedLine(frame, points[0], points[1], (255,0,0), 2)
+
     # show the frame
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
