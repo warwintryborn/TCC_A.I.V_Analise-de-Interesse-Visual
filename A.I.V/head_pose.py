@@ -41,7 +41,7 @@ class HeadPose():
                                  [0, 0, 1]], dtype = "double"
                                  )
  
-        print ("Camera Matrix :\n {0}".format(self.camera_matrix))
+#        print ("Camera Matrix :\n {0}".format(self.camera_matrix))
         
     def getLinePoints(self, face_points):
         

@@ -16,7 +16,7 @@ import head_pose
 
 # initialize the video stream and allow the cammera sensor to warmup
 print("[INFO] camera sensor warming up...")
-vs = VideoStream(1).start()
+vs = VideoStream(0).start()
 time.sleep(2.0)
 lm = land_mark.LandMark();
 hp = head_pose.HeadPose(cv2);
@@ -35,17 +35,18 @@ while True:
     
     mapa = lm.getLandMark();
     
-    points = hp.getLinePoints(lm.getFace);
-     
-    # loop over the (x, y)-coordinates for the facial landmarks
-    # and draw them on the image
-    for face in mapa:  
-        for mark in face:            
-            x = mark[0]
-            y = mark[1]
-            cv2.circle(frame, (int(x),int(y)), 2, (0, 0, 255), -1)
+    if( None is not mapa ):
+        # loop over the (x, y)-coordinates for the facial landmarks
+        # and draw them on the image
+        for face in mapa:  
             
-    cv2.arrowedLine(frame, points[0], points[1], (255,0,0), 2)
+            for mark in face:            
+                x = mark[0]
+                y = mark[1]
+                cv2.circle(frame, (int(x), int(y)), 2, (0, 0, 255), -1)
+                
+            points = hp.getLinePoints(face);
+            cv2.arrowedLine(frame, points[0], points[1], (255,0,0), 2)
 
     # show the frame
     cv2.imshow("Frame", frame)

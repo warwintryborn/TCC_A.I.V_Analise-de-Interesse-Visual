@@ -5,7 +5,7 @@ import numpy as np
 
 class LandMark():
     
-    __mapa = [];
+    __face = [];
     
     def __init__(self):
         print("[INFO] loading facial landmark predictor...")
@@ -16,8 +16,9 @@ class LandMark():
         self.gray = gray;
     
     def getLandMark(self):
+        
         rects = self.detector(self.gray, 0);
-        self.__mapa.clear();
+        self.__face.clear();
         
         # loop over the face detections
         for rect in rects:            
@@ -29,23 +30,18 @@ class LandMark():
             
             QUEIXO = shape[8];
             NARIZ = shape[30];
-            BOCA_ESQUERDO = shape[36];
-            BOCA_DIREITO = shape[45];
-            OLHO_ESQUERDO = shape[48];
-            OLHO_DIREITO = shape[64];
+            BOCA_ESQUERDO = shape[54];
+            BOCA_DIREITO = shape[48];
+            OLHO_ESQUERDO = shape[45];
+            OLHO_DIREITO = shape[36];
             
-            self.__face =  np.array([
+            self.__face.append( np.array([
                             NARIZ,              # Nose tip
                             QUEIXO,             # Chin
                             OLHO_ESQUERDO,      # Left eye left corner
                             OLHO_DIREITO,       # Right eye right corne
                             BOCA_ESQUERDO,      # Left Mouth corner
                             BOCA_DIREITO        # Right mouth corner
-                        ], dtype="double")
-    
-            self.__mapa.append(self.face);
+                        ], dtype="double"))
 
-        return self.__mapa;
-    
-    def getFace(self):
-       return self.__face; 
+            return self.__face;
