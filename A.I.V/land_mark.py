@@ -17,11 +17,11 @@ class LandMark():
     
     def getLandMark(self):
         
-        rects = self.detector(self.gray, 0);
+        rects = self.detector(self.gray, 1);
         self.__face.clear();
         
         # loop over the face detections
-        for rect in rects:            
+        for (i, rect) in enumerate(rects):            
             # determine the facial landmarks for the face region, then
             # convert the facial landmark (x, y)-coordinates to a NumPy
             # array
@@ -43,5 +43,5 @@ class LandMark():
                             BOCA_ESQUERDO,      # Left Mouth corner
                             BOCA_DIREITO        # Right mouth corner
                         ], dtype="double"))
-
+            print(i)
             return self.__face;

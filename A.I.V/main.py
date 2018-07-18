@@ -34,6 +34,7 @@ while True:
     hp.setVideo(gray);
     
     mapa = lm.getLandMark();
+    print(mapa)
     
     if( None is not mapa ):
         # loop over the (x, y)-coordinates for the facial landmarks
@@ -57,5 +58,5 @@ while True:
         break
     
 # do a bit of cleanup
-cv2.destroyAllWindows()
 vs.stop()
+cv2.destroyAllWindows()

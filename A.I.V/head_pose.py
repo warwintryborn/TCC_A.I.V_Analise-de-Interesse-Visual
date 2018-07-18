@@ -52,8 +52,19 @@ class HeadPose():
         if( not success ):
             return None;
         
-        print ("Rotation Vector:\n {0}".format(rotation_vector))
-        print ("Translation Vector:\n {0}".format(translation_vector))
+#        print ("Rotation Vector:\n {0}".format(rotation_vector))
+#        print ("Translation Vector:\n {0}".format(translation_vector))
+        
+        '''
+        Translate Vector:
+            [ Rosto para direita (+) Rosto para esqueda (-)
+            
+            ]
+        Rotation Vector:
+            [
+            Virar o rosto para direita (+) para a esquerda (-)
+            ]
+        '''
         
         # Project a 3D point (0, 0, 1000.0) onto the image plane.
         # We use this to draw a line sticking out of the nose
@@ -62,6 +73,8 @@ class HeadPose():
      
         p1 = ( int(image_points[0][0]), int(image_points[0][1]))
         p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
+        
+        print(p2);
         
         line_points = (p1,p2)
         
