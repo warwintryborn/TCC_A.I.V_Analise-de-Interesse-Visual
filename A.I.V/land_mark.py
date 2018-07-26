@@ -44,4 +44,4 @@ class LandMark():
                             BOCA_DIREITO        # Right mouth corner
                         ], dtype="double"))
             print(i)
-            return self.__face;
+        return self.__face;
