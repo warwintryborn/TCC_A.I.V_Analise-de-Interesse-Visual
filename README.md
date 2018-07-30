@@ -1,7 +1,8 @@
 # TCC
 Repositorio para Trabalho de conclusão de curso para o curso de Engenharia de Controle e Automação do Instituto Mauá de Tecnologia.
 
-# Objetivo: Gerar um mapa de calor de interesse de uma vitrine de loja baseado na direção da cabeça;
+# Objetivo: 
+Gerar um mapa de calor de interesse de uma vitrine de loja baseado na direção da cabeça;
 
 # Grupo: 
   - Felipe Martins Simão;
