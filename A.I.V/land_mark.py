@@ -12,10 +12,10 @@ class LandMark():
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor("./face_predictor/shape_predictor_68_face_landmarks.dat")
     
-    def setVideo(self, gray):
+    def set_video(self, gray):
         self.gray = gray;
     
-    def getLandMark(self):
+    def get_land_mark(self):
         
         rects = self.detector(self.gray, 1);
         self.__face.clear();

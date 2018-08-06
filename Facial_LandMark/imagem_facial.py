@@ -28,7 +28,7 @@ image = imutils.resize(image, width=500)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # detect faces in the grayscale image
-rects = detector(gray, 1)
+rects = detector(gray,2)
 
 # loop over the face detections
 for (i, rect) in enumerate(rects):
@@ -55,6 +55,8 @@ for (i, rect) in enumerate(rects):
 		if( k == 36 or k == 48 or k == 30 or k == 45 or k == 64 or k == 8 ):
 			cv2.putText(image,"{}".format(k), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.2, (0, 0, 255), 1)
 		k += 1;
+        
+print(i + 1);
  
 # show the output image with the face detections + facial landmarks
 cv2.imshow("Output", image)
