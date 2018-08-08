@@ -4,9 +4,9 @@ import imutils
 import time
 import cv2
 import threading as th
-import land_mark
-import head_pose
-import heat_mapping
+from land_mark import LandMark
+from head_pose import HeadPose
+from heat_mapping import HeatMaping
 
 
 def main():
@@ -22,13 +22,18 @@ def main():
     print("[INFO] camera sensor warming up...")
     vs = VideoStream(0).start()
     time.sleep(2.0)
-    lm = land_mark.LandMark();
-    hp = head_pose.HeadPose(cv2);
-
+    
+    lm = LandMark();
+    hp = HeadPose(cv2);
+    global hm;
+    
+    hm = HeatMaping();
+    
     heat_thread = th.Thread(target=heat_map_thread)
     heat_thread.start();
 
     global boIsHeatMapRunning;
+    boIsHeatMapRunning = False
 
     # loop over the frames from the video stream
     while True:
@@ -46,7 +51,6 @@ def main():
         hp.set_video(gray);
 
         mapa = lm.get_land_mark();
-        print(mapa)
 
         if (None is not mapa):
             # loop over the (x, y)-coordinates for the facial landmarks
@@ -63,12 +67,13 @@ def main():
 
         # show the frame
         cv2.imshow("Frame", frame)
+        hm.show_map();
         key = cv2.waitKey(1) & 0xFF
 
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             break
-
+    boIsHeatMapRunning = False;
     # do a bit of cleanup
     vs.stop()
     cv2.destroyAllWindows();
@@ -76,12 +81,13 @@ def main():
 
 def heat_map_thread():
     while boIsHeatMapRunning:
-         '''
+        hm.show_map();
+        '''
              Heat map thread!
     
              Atualizar vetor Z;
              Mostrar Heat Map;
-         '''
+        '''
 
 
 if __name__ == "__main__":

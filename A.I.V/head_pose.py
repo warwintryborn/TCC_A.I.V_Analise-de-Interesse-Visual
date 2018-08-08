@@ -80,3 +80,6 @@ class HeadPose():
         line_points = (p1, p2)
 
         return line_points;
+
+if ( __name__ == '__main__'):
+    hp = HeadPose

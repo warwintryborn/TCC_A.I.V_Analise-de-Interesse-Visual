@@ -33,6 +33,7 @@ class HeatMaping:
 
     def __init__(self):
         n = 1e5
+        PLT.figure(1)
         self.__x = self.__y = NP.linspace(0, self.__RESOLUCAO,
                                           self.__RESOLUCAO)  # Valor min, valor max, Numero de divisões
         X, Y = NP.meshgrid(self.__x, self.__y)  # Transforma em grid
@@ -44,7 +45,7 @@ class HeatMaping:
         self.__x = X.ravel()
         self.__y = Y.ravel()
         self.__heatArray = NP.zeros(
-            self.__RESOLUCAO ^ 2)  # NP.random.randn(400*400)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
+            self.__RESOLUCAO * self.__RESOLUCAO)  # NP.random.randn(400*400)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
 
         self.__gridsize = 60
         PLT.subplot(111)
@@ -84,3 +85,7 @@ class HeatMaping:
         cb.set_label('mean value')
         PLT.show()
         return;
+        
+if (__name__ == '__main__' ):
+    hm = HeatMaping
+    hm.show_map();

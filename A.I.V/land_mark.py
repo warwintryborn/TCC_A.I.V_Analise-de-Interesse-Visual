@@ -43,5 +43,8 @@ class LandMark():
                             BOCA_ESQUERDO,      # Left Mouth corner
                             BOCA_DIREITO        # Right mouth corner
                         ], dtype="double"))
-            print(i)
+    
         return self.__face;
+    
+if ( __name__ == '__main__' ):
+    lm = LandMark
