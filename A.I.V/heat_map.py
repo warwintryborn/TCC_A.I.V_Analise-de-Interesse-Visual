@@ -85,7 +85,11 @@ class HeatMaping:
         cb.set_label('mean value')
         PLT.show()
         return;
+
+    def teste_heat(self):
+        self.__heatArray = NP.random.randn(self.__RESOLUCAO * self.__RESOLUCAO)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
+
         
 if (__name__ == '__main__' ):
-    hm = HeatMaping
+    hm = HeatMaping()
     hm.show_map();
