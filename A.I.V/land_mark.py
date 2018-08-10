@@ -24,17 +24,15 @@ class LandMark():
             # determine the facial landmarks for the face region, then
             # convert the facial landmark (x, y)-coordinates to a NumPy
             # array
-            __shape = self.predictor(self.gray, rect)
-            __shape = face_utils.shape_to_np(__shape)
+            self.__shape = self.predictor(self.gray, rect)
+            self.__shape = face_utils.shape_to_np(self.__shape)
 
-            self.show_all = __shape
-
-            QUEIXO = __shape[8];
-            NARIZ = __shape[30];
-            BOCA_ESQUERDO = __shape[54];
-            BOCA_DIREITO = __shape[48];
-            OLHO_ESQUERDO = __shape[45];
-            OLHO_DIREITO = __shape[36];
+            QUEIXO = self.__shape[8];
+            NARIZ = self.__shape[30];
+            BOCA_ESQUERDO = self.__shape[54];
+            BOCA_DIREITO = self.__shape[48];
+            OLHO_ESQUERDO = self.__shape[45];
+            OLHO_DIREITO = self.__shape[36];
 
             self.__face.append(np.array([
                 NARIZ,  # Nose tip
@@ -48,8 +46,8 @@ class LandMark():
         return self.__face;
 
     @property
-    def show_all(self):
-        return self.show_all
+    def shape(self):
+        return self.__shape
 
 if (__name__ == '__main__'):
     lm = LandMark

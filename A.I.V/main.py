@@ -53,8 +53,8 @@ def main():
         if (None is not mapa): #Encontrou alguns rostos
 
             for face in mapa:   #Loop pelos rostos encontrados
-                for (x, y) in land_mark.show_all:
-                    cv2.circle(frame, (int(x), int(y)), 2, (0, 0, 255), -1)
+                for (x, y) in land_mark.shape:
+                    cv2.circle(frame, (int(x), int(y)), 1, (0, 0, 255), -1)
 
                 points = head_pose.get_line_points(face);
                 cv2.arrowedLine(frame, points[0], points[1], (255, 0, 0), 2)

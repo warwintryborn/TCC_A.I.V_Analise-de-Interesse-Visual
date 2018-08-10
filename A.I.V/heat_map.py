@@ -39,8 +39,8 @@ class HeatMaping:
         X, Y = NP.meshgrid(self.__x, self.__y)  # Transforma em grid
         '''Quanto maior o numero de divisões mais qualidade a imagem tem'''
 
-        Z1 = ML.bivariate_normal(X, Y, 2, 2, 0, 0)
-        Z2 = ML.bivariate_normal(X, Y, 4, 1, 1, 1)
+#        Z1 = ML.bivariate_normal(X, Y, 2, 2, 0, 0)
+#        Z2 = ML.bivariate_normal(X, Y, 4, 1, 1, 1)
 
         self.__x = X.ravel()
         self.__y = Y.ravel()
@@ -90,6 +90,6 @@ class HeatMaping:
         self.__heatArray = NP.random.randn(self.__RESOLUCAO * self.__RESOLUCAO)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
 
         
-if (__name__ == '__main__' ):
+if (__name__ == "__main__" ):
     hm = HeatMaping()
     hm.show_map();
