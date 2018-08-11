@@ -9,7 +9,7 @@ from head_pose import HeadPose
 from heat_map import HeatMaping
 
 
-def main():
+def video_stream():
     # construct the argument parse and parse the arguments
     # ap = argparse.ArgumentParser()
     # ap.add_argument("-p", "--shape-predictor", required=True,
@@ -20,20 +20,11 @@ def main():
 
     # initialize the video stream and allow the cammera sensor to warmup
     print("[INFO] camera sensor warming up...")
-    vs = VideoStream(0).start()
+    vs = VideoStream(1).start()
     time.sleep(2.0)
     
     land_mark = LandMark();
     head_pose = HeadPose(cv2);
-
-    global heat_map
-    heat_map = HeatMaping();
-
-    global is_Heat_Map_Running;
-    is_Heat_Map_Running = True;
-
-    heat_thread = th.Thread(target=heat_map_thread)
-    heat_thread.start();
 
     # Loop de frames do video
     while True:
@@ -41,7 +32,7 @@ def main():
         frame = vs.read()
 
         if (None is not frame):
-            frame = imutils.resize(frame, width=400, height=400)
+            frame = imutils.resize(frame, width=500, height=500)
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -53,8 +44,8 @@ def main():
         if (None is not mapa): #Encontrou alguns rostos
 
             for face in mapa:   #Loop pelos rostos encontrados
-                for (x, y) in land_mark.shape:
-                    cv2.circle(frame, (int(x), int(y)), 1, (0, 0, 255), -1)
+                for (x, y) in face:
+                    cv2.circle(frame, (int(x), int(y)), 3, (0, 0, 255), -1)
 
                 points = head_pose.get_line_points(face);
                 cv2.arrowedLine(frame, points[0], points[1], (255, 0, 0), 2)
@@ -65,16 +56,22 @@ def main():
 
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
-            break
-
-    is_Heat_Map_Running = False;
+            is_Heat_Map_Running = False;
+            break;
 
     vs.stop()
     cv2.destroyAllWindows();
 
 
 def heat_map_thread():
+    global heat_map
+    heat_map = HeatMaping();
+    heat_map.show_map();
+
+    is_Heat_Map_Running = True;
+
     while is_Heat_Map_Running:
+        heat_map.update_map();
 
         # Atualizar os valores do heatmap
         # Salvar a imagem em um arquivo
@@ -82,6 +79,15 @@ def heat_map_thread():
         '''
         Mostrar heatmap em paralelo com o video
         '''
+    return;
 
 if __name__ == "__main__":
-    main()
+
+    heat_thread = th.Thread(target=video_stream)
+    heat_thread.start();
+
+    global is_Heat_Map_Running;
+
+    # heat_map_thread()
+
+    exit()

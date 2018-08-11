@@ -33,7 +33,7 @@ class HeatMaping:
 
     def __init__(self):
         n = 1e5
-        PLT.figure(1)
+        self.fig = PLT.figure(1)
         self.__x = self.__y = NP.linspace(0, self.__RESOLUCAO,
                                           self.__RESOLUCAO)  # Valor min, valor max, Numero de divisões
         X, Y = NP.meshgrid(self.__x, self.__y)  # Transforma em grid
@@ -84,11 +84,23 @@ class HeatMaping:
         cb = PLT.colorbar()
         cb.set_label('mean value')
         PLT.show()
+        PLT.close();
         return;
 
     def teste_heat(self):
         self.__heatArray = NP.random.randn(self.__RESOLUCAO * self.__RESOLUCAO)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
 
+    def update_map(self):
+        x = NP.linspace(0, 6 * NP.pi, 100)
+        y = NP.sin(x)
+
+        ax = self.fig.add_subplot(111)
+        line1, = ax.plot(x, y, 'r-')  # Returns a tuple of line objects, thus the comma
+
+        for phase in NP.linspace(0, 10 * NP.pi, 500):
+            line1.set_ydata(NP.sin(x + phase))
+            self.fig.canvas.draw()
+            self.fig.canvas.flush_events()
         
 if (__name__ == "__main__" ):
     hm = HeatMaping()
