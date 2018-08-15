@@ -20,7 +20,7 @@ def video_stream():
 
     # initialize the video stream and allow the cammera sensor to warmup
     print("[INFO] camera sensor warming up...")
-    vs = VideoStream(1).start()
+    vs = VideoStream(0).start()
     time.sleep(2.0)
     
     land_mark = LandMark();
@@ -32,7 +32,7 @@ def video_stream():
         frame = vs.read()
 
         if (None is not frame):
-            frame = imutils.resize(frame, width=500, height=500)
+            frame = imutils.resize(frame, width=400, height=400)
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -45,7 +45,7 @@ def video_stream():
 
             for face in mapa:   #Loop pelos rostos encontrados
                 for (x, y) in face:
-                    cv2.circle(frame, (int(x), int(y)), 3, (0, 0, 255), -1)
+                    cv2.circle(frame, (int(x), int(y)), 2, (0, 0, 255), -1)
 
                 points = head_pose.get_line_points(face);
                 cv2.arrowedLine(frame, points[0], points[1], (255, 0, 0), 2)
@@ -56,9 +56,9 @@ def video_stream():
 
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
-            is_Heat_Map_Running = False;
             break;
 
+    is_Heat_Map_Running = False;
     vs.stop()
     cv2.destroyAllWindows();
 
@@ -66,13 +66,11 @@ def video_stream():
 def heat_map_thread():
     global heat_map
     heat_map = HeatMaping();
-    heat_map.show_map();
 
     is_Heat_Map_Running = True;
 
     while is_Heat_Map_Running:
-        heat_map.update_map();
-
+        heat_map.show_map();
         # Atualizar os valores do heatmap
         # Salvar a imagem em um arquivo
         # Plotar em uma janela separada o heatmap sempre atualizado
@@ -83,11 +81,11 @@ def heat_map_thread():
 
 if __name__ == "__main__":
 
-    heat_thread = th.Thread(target=video_stream)
+    global is_Heat_Map_Running;
+    is_Heat_Map_Running = True;
+    heat_thread = th.Thread(target=heat_map_thread)
     heat_thread.start();
 
-    global is_Heat_Map_Running;
-
-    # heat_map_thread()
+    video_stream()
 
     exit()

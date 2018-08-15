@@ -11,7 +11,8 @@ import numpy as NP
 
 
 class HeatMaping:
-    __RESOLUCAO = 100
+    __WIDTH = 30
+    __HIGHT = 15
     __VALOR_INCREMENTAL = 5
 
     @property
@@ -32,28 +33,22 @@ class HeatMaping:
             self.__heatArray = value;
 
     def __init__(self):
-        PLT.figure(1)
-        self.__x = self.__y = NP.linspace(0, self.__RESOLUCAO,
-                                          self.__RESOLUCAO)  # Valor min, valor max, Numero de divisões
-        X, Y = NP.meshgrid(self.__x, self.__y)  # Transforma em grid
-        '''Quanto maior o numero de divisões mais qualidade a imagem tem'''
-
-        self.__x = X.ravel()
-        self.__y = Y.ravel()
-        self.__heatArray = NP.zeros( self.__RESOLUCAO **2 )  # NP.random.randn(400*400)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
-        self.go = False
-        self.__gridsize = 60
-
-        PLT.subplot(111)
-        PLT.hexbin(self.__x, self.__y, C=self.__heatArray, gridsize=self.__gridsize, cmap=CM.jet, bins=None)
-        PLT.axis([self.__x.min(), self.__x.max(), self.__y.min(), self.__y.max()])
-        cb = PLT.colorbar()
-        cb.set_label('mean value')
+        try:
+            self.__heatArray = NP.random.random((self.__HIGHT, self.__WIDTH))
+            # create the figure
+            self.fig = PLT.figure()
+            self.ax = self.fig.add_subplot(111)
+            self.im = self.ax.imshow(self.__heatArray)
+            PLT.show(block=False)
+            PLT.pause(0.01)
+        except:
+            pass
 
     def incrementa(self, x, y, raio):
         __heat = [8];
 
         if (x > self.__RESOLUCAO or y > self.__RESOLUCAO):
+            #Adicionar mensagem de erro!!
             return;
 
         local = (x * self.__RESOLUCAO + y * self.__RESOLUCAO)
@@ -78,27 +73,26 @@ class HeatMaping:
         return;
 
     def show_map(self):
-        while( True ):
-            if ( self.go == False ):
-                PLT.hexbin(self.__x, self.__y, C=self.__heatArray, gridsize=self.__gridsize, cmap=CM.jet, bins=None)
-                self.go = True
-
-        return;
-
-    def teste_heat(self):
-        self.__heatArray = NP.random.randn(self.__RESOLUCAO ** 2)#ZD.ravel() #Tem que ser um array com (Numero de divisões)^2
+        try:
+            #Transfor para numpy array
+            self.__heatArray = NP.random.random((self.__HIGHT, self.__WIDTH))
+            self.im.set_array(self.__heatArray)
+            self.fig.canvas.draw()
+            PLT.pause(0.01)
+        except:
+            pass
         return
 
-        
+
+    def teste_heat(self):
+        self.__heatArray = NP.random.random((self.__HIGHT, self.__WIDTH))
+        return
+
+
 if (__name__ == '__main__' ):
-    from time import sleep
-    import threading as th
 
     hm = HeatMaping()
-    heat_thread = th.Thread(target=hm.show_map)
-    heat_thread.start();
-    while( True ):
-        sleep(10)
-        if hm.go:
-            hm.teste_heat()
-            hm.go = False
+
+    for i in range(100):
+        hm.teste_heat()
+        hm.show_map()
