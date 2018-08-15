@@ -14,6 +14,7 @@ class HeatMaping:
     __WIDTH = 30
     __HIGHT = 15
     __VALOR_INCREMENTAL = 5
+    __HEATTYPE = 'jet'
 
     @property
     def resolucao(self):
@@ -25,20 +26,26 @@ class HeatMaping:
 
     @property
     def heatArray(self):
-        return self.__heatArray
+        return self.__heatValue
 
     @heatArray.setter
     def heatArray(self, value):
         if (value.size == self.__RESOLUCAO):
-            self.__heatArray = value;
+            self.__heatValue = value;
 
     def __init__(self):
         try:
-            self.__heatArray = NP.random.random((self.__HIGHT, self.__WIDTH))
             # create the figure
             self.fig = PLT.figure()
-            self.ax = self.fig.add_subplot(111)
-            self.im = self.ax.imshow(self.__heatArray)
+            PLT.set_cmap(self.__HEATTYPE)
+
+            ax = self.fig.add_subplot(111)
+            self.__heatValue = NP.random.random((self.__HIGHT, self.__WIDTH))
+            self.im = ax.imshow(self.__heatValue,interpolation='nearest')
+            cb = self.fig.colorbar(self.im, ticks=[])
+            cb.set_ticklabels('asdas');
+
+            self.config_heat_fig();
             PLT.show(block=False)
             PLT.pause(0.01)
         except:
@@ -68,15 +75,15 @@ class HeatMaping:
             if (posicao > self.__RESOLUCAO or posicao < 0):
                 continue;
 
-            self.__heatArray[posicao] = self.__VALOR_INCREMENTAL;
+            self.__heatValue[posicao] = self.__VALOR_INCREMENTAL;
 
         return;
 
     def show_map(self):
         try:
             #Transfor para numpy array
-            self.__heatArray = NP.random.random((self.__HIGHT, self.__WIDTH))
-            self.im.set_array(self.__heatArray)
+            self.__heatValue = NP.random.random((self.__HIGHT, self.__WIDTH))
+            self.im.set_array(self.__heatValue)
             self.fig.canvas.draw()
             PLT.pause(0.01)
         except:
@@ -85,8 +92,14 @@ class HeatMaping:
 
 
     def teste_heat(self):
-        self.__heatArray = NP.random.random((self.__HIGHT, self.__WIDTH))
+        self.__heatValue = NP.random.random((self.__HIGHT, self.__WIDTH))
         return
+
+    def config_heat_fig(self):
+
+        PLT.axis('off');
+        PLT.suptitle("A.I.V.");
+        PLT.colorbar()
 
 
 if (__name__ == '__main__' ):
