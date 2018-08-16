@@ -4,6 +4,8 @@ Created on Mon Jul 30 18:34:19 2018
 
 @author: ggoncalves
 """
+import sys
+
 from matplotlib import pyplot as PLT
 from matplotlib import cm as CM
 from matplotlib import mlab as ML
@@ -40,10 +42,9 @@ class HeatMaping:
             PLT.set_cmap(self.__HEATTYPE)
 
             ax = self.fig.add_subplot(111)
-            self.__heatValue = NP.random.random((self.__HIGHT, self.__WIDTH))
+            self.__heatValue = NP.zeros((self.__HIGHT, self.__WIDTH))#random.random((self.__HIGHT, self.__WIDTH))
             self.im = ax.imshow(self.__heatValue,interpolation='nearest')
-            cb = self.fig.colorbar(self.im, ticks=[])
-            cb.set_ticklabels('asdas');
+            self.clb = self.fig.colorbar(self.im, ticks=[]);
 
             self.config_heat_fig();
             PLT.show(block=False)
@@ -51,42 +52,54 @@ class HeatMaping:
         except:
             pass
 
-    def incrementa(self, x, y, raio):
-        __heat = [8];
+    def incrementa(self, x, y, raio = 0):
 
-        if (x > self.__RESOLUCAO or y > self.__RESOLUCAO):
-            #Adicionar mensagem de erro!!
-            return;
+        self.heatArray[x][y] = self.__VALOR_INCREMENTAL
+        self.__VALOR_INCREMENTAL += 5
 
-        local = (x * self.__RESOLUCAO + y * self.__RESOLUCAO)
+        # __heat = [8];
 
-        for i in range(0, raio):
-            __heat[0] = local + i;  # direita
-            __heat[1] = local - i;  # esquerda
-            __heat[2] = local + i * self.__RESOLUCAO;  # cima
-            __heat[3] = local - i * self.__RESOLUCAO;  # baixo
-            __heat[4] = local + i + i * self.__RESOLUCAO;  # direita em cima
-            __heat[5] = local - i + i * self.__RESOLUCAO;  # esquerda em cima
-            __heat[6] = local + i - i * self.__RESOLUCAO;  # direita em baixo
-            __heat[7] = local - i - i * self.__RESOLUCAO;  # esquerda em baixo
+        # if (0 > x > self.__WIDTH or 0 > y > self.__HIGHT):
+        #     #Adicionar mensagem de erro!!
+        #     return;
 
-        for posicao in __heat:
+        # local = (x * self.__RESOLUCAO + y * self.__RESOLUCAO)
 
-            if (posicao > self.__RESOLUCAO or posicao < 0):
-                continue;
+        # for i in range(0, raio):
+        #     __heat[0] = local + i;  # direita
+        #     __heat[1] = local - i;  # esquerda
+        #     __heat[2] = local + i * self.__RESOLUCAO;  # cima
+        #     __heat[3] = local - i * self.__RESOLUCAO;  # baixo
+        #     __heat[4] = local + i + i * self.__RESOLUCAO;  # direita em cima
+        #     __heat[5] = local - i + i * self.__RESOLUCAO;  # esquerda em cima
+        #     __heat[6] = local + i - i * self.__RESOLUCAO;  # direita em baixo
+        #     __heat[7] = local - i - i * self.__RESOLUCAO;  # esquerda em baixo
 
-            self.__heatValue[posicao] = self.__VALOR_INCREMENTAL;
+        # for posicao in __heat:
+        #
+        #     if (posicao > self.__RESOLUCAO or posicao < 0):
+        #         continue;
+        #
+        #     self.__heatValue[posicao] = self.__VALOR_INCREMENTAL;
 
         return;
 
     def show_map(self):
         try:
             #Transfor para numpy array
-            self.__heatValue = NP.random.random((self.__HIGHT, self.__WIDTH))
+            # self.__heatValue = NP.random.random((self.__HIGHT, self.__WIDTH))
             self.im.set_array(self.__heatValue)
             self.fig.canvas.draw()
+
+            vmax = self.__heatValue.max()
+            vmin = self.__heatValue.min()
+
+            self.clb.set_clim(vmin=vmin,vmax=vmax);
+
             PLT.pause(0.01)
         except:
+            error = sys.exc_info()[0]
+            print("Unexpected error:", error)
             pass
         return
 
@@ -101,11 +114,19 @@ class HeatMaping:
         PLT.suptitle("A.I.V.");
         PLT.colorbar()
 
+    # def incr(self):
+        # self.heatArray[]
 
 if (__name__ == '__main__' ):
 
     hm = HeatMaping()
 
-    for i in range(100):
-        hm.teste_heat()
-        hm.show_map()
+    # heat = []
+    for i in range(14, -1, -1):
+        # heat.append([0])
+        for k in range(30):
+            # heat[i].append(0)
+            hm.incrementa(i, k)
+            hm.show_map()
+
+    hm.show_map()
