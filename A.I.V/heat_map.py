@@ -15,8 +15,10 @@ import numpy as NP
 class HeatMaping:
     __WIDTH = 30
     __HIGHT = 15
-    __VALOR_INCREMENTAL = 5
+    __VALOR_INCREMENTAL = 4
+    __VALOR_INCREMENTAL_PERIFERIA = __VALOR_INCREMENTAL/2
     __HEATTYPE = 'jet'
+    __RAIO = 2
 
     @property
     def resolucao(self):
@@ -52,35 +54,37 @@ class HeatMaping:
         except:
             pass
 
-    def incrementa(self, x, y, raio = 0):
+    def incrementa(self, x, y):
 
         self.heatArray[x][y] = self.__VALOR_INCREMENTAL
         self.__VALOR_INCREMENTAL += 5
 
-        # __heat = [8];
+        __heat = [8];
 
-        # if (0 > x > self.__WIDTH or 0 > y > self.__HIGHT):
-        #     #Adicionar mensagem de erro!!
-        #     return;
+        if (0 > x > self.__WIDTH or 0 > y > self.__HIGHT):
+            #Adicionar mensagem de erro!!
+            return;
 
         # local = (x * self.__RESOLUCAO + y * self.__RESOLUCAO)
 
-        # for i in range(0, raio):
-        #     __heat[0] = local + i;  # direita
-        #     __heat[1] = local - i;  # esquerda
-        #     __heat[2] = local + i * self.__RESOLUCAO;  # cima
-        #     __heat[3] = local - i * self.__RESOLUCAO;  # baixo
-        #     __heat[4] = local + i + i * self.__RESOLUCAO;  # direita em cima
-        #     __heat[5] = local - i + i * self.__RESOLUCAO;  # esquerda em cima
-        #     __heat[6] = local + i - i * self.__RESOLUCAO;  # direita em baixo
-        #     __heat[7] = local - i - i * self.__RESOLUCAO;  # esquerda em baixo
 
-        # for posicao in __heat:
-        #
-        #     if (posicao > self.__RESOLUCAO or posicao < 0):
-        #         continue;
-        #
-        #     self.__heatValue[posicao] = self.__VALOR_INCREMENTAL;
+        for i in range(0, self.__RAIO):
+
+            self.__heatValue[x + i][0] = self.__VALOR_INCREMENTAL;                  # direita
+            self.__heatValue[x - i][0] = self.__VALOR_INCREMENTAL;                  # esquerda
+            self.__heatValue[0][y + i] = self.__VALOR_INCREMENTAL;                  # cima
+            self.__heatValue[0][y - i] = self.__VALOR_INCREMENTAL;
+            self.__heatValue[x + i][y + i] = self.__VALOR_INCREMENTAL_PERIFERIA;    # direita em cima
+            self.__heatValue[x - i][y + i] = self.__VALOR_INCREMENTAL_PERIFERIA;    # esquerda em cima
+            self.__heatValue[x - i][y + i] = self.__VALOR_INCREMENTAL_PERIFERIA;    # direita em baixo
+            self.__heatValue[x - i][y - i] = self.__VALOR_INCREMENTAL_PERIFERIA;    # esquerda em baixo
+
+        for posicao in __heat:
+
+            if (posicao > self.__RESOLUCAO or posicao < 0):
+                continue;
+
+            self.__heatValue[posicao] = self.__VALOR_INCREMENTAL;
 
         return;
 
