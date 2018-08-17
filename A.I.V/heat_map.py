@@ -7,7 +7,8 @@ Created on Mon Jul 30 18:34:19 2018
 import sys
 
 from matplotlib import pyplot as PLT
-from matplotlib import cm as CM
+from matplotlib import cbook as CBOOK
+# from scipy.misc import imread
 from matplotlib import mlab as ML
 import numpy as NP
 
@@ -39,25 +40,32 @@ class HeatMaping:
 
     def __init__(self):
         try:
+            datafile = CBOOK.get_sample_data('C:\Gustavo\Stuffs\GitHub\TCC\A.I.V\maua2.png')
+            img = PLT.imread(datafile)
+
             # create the figure
-            self.fig = PLT.figure()
+            PLT.rcParams['toolbar'] = 'None'
+            self.fig = PLT.figure(9,figsize=img.size())
             PLT.set_cmap(self.__HEATTYPE)
 
             ax = self.fig.add_subplot(111)
             self.__heatValue = NP.zeros((self.__HIGHT, self.__WIDTH))#random.random((self.__HIGHT, self.__WIDTH))
-            self.im = ax.imshow(self.__heatValue,interpolation='nearest')
+            self.im = ax.imshow(self.__heatValue,alpha=0.5)
+            self.im = ax.imshow(img,alpha=0.4)
             self.clb = self.fig.colorbar(self.im, ticks=[]);
 
             self.config_heat_fig();
             PLT.show(block=False)
             PLT.pause(0.01)
         except:
-            pass
+            error = sys.exc_info()[0]
+            print("Unexpected error:", error)
 
     def incrementa(self, x, y):
 
         self.heatArray[x][y] = self.__VALOR_INCREMENTAL
         self.__VALOR_INCREMENTAL += 5
+        return;
 
         __heat = [8];
 
@@ -104,7 +112,6 @@ class HeatMaping:
         except:
             error = sys.exc_info()[0]
             print("Unexpected error:", error)
-            pass
         return
 
 
@@ -114,22 +121,19 @@ class HeatMaping:
 
     def config_heat_fig(self):
 
+        titulo_janela = PLT.gcf()
+        titulo_janela.canvas.set_window_title('Análise de Interesse Visual - Heatmap vitrine')
         PLT.axis('off');
-        PLT.suptitle("A.I.V.");
+        PLT.suptitle("A.I.V.", fontsize=32);
+        PLT.title("Vitrine", fontsize=12);
         PLT.colorbar()
-
-    # def incr(self):
-        # self.heatArray[]
 
 if (__name__ == '__main__' ):
 
     hm = HeatMaping()
 
-    # heat = []
     for i in range(14, -1, -1):
-        # heat.append([0])
         for k in range(30):
-            # heat[i].append(0)
             hm.incrementa(i, k)
             hm.show_map()
 
