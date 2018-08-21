@@ -6,7 +6,7 @@ import cv2
 import threading as th
 from land_mark import LandMark
 from head_pose import HeadPose
-from heat_map import HeatMaping
+from heatmap import HeatMaping
 
 
 def video_stream():
@@ -19,9 +19,9 @@ def video_stream():
     # args = vars(ap.parse_args())
 
     # initialize the video stream and allow the cammera sensor to warmup
-    print("[INFO] camera sensor warming up...")
+    print("[INFO] Preparando a câmera...")
     vs = VideoStream(0).start()
-    time.sleep(2.0)
+    time.sleep(1.0)
     
     land_mark = LandMark();
     head_pose = HeadPose(cv2);

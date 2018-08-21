@@ -40,18 +40,18 @@ class HeatMaping:
 
     def __init__(self):
         try:
-            datafile = CBOOK.get_sample_data('C:\Gustavo\Stuffs\GitHub\TCC\A.I.V\maua2.png')
-            img = PLT.imread(datafile)
+            # datafile = CBOOK.get_sample_data('C:\Gustavo\Stuffs\GitHub\TCC\A.I.V\maua2.png')
+            # img = PLT.imread(datafile)
 
             # create the figure
             PLT.rcParams['toolbar'] = 'None'
-            self.fig = PLT.figure(9,figsize=img.size())
+            self.fig = PLT.figure()
             PLT.set_cmap(self.__HEATTYPE)
 
             ax = self.fig.add_subplot(111)
             self.__heatValue = NP.zeros((self.__HIGHT, self.__WIDTH))#random.random((self.__HIGHT, self.__WIDTH))
             self.im = ax.imshow(self.__heatValue,alpha=0.5)
-            self.im = ax.imshow(img,alpha=0.4)
+            # self.im = ax.imshow(img,alpha=0.4)
             self.clb = self.fig.colorbar(self.im, ticks=[]);
 
             self.config_heat_fig();
