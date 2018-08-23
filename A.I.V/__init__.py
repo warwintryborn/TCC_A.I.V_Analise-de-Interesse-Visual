@@ -1,15 +1,33 @@
 # import the necessary packages
-from imutils.video import VideoStream
-import imutils
+
 import time
 import cv2
 import threading as th
 from land_mark import LandMark
 from head_pose import HeadPose
-from heatmap import HeatMaping
+from heatmap import HeatMap
+
+def set_resolution_1080(cap):
+    cap.set(3,1920) #Pixel horizontal
+    cap.set(4,1080) #Pixel vertical
+
+def set_resolution_900(cap):
+    cap.set(3,1600) #Pixel horizontal
+    cap.set(4,900) #Pixel vertical
+
+def set_resolution_720(cap):
+    cap.set(3,1280) #Pixel horizontal
+    cap.set(4,720) #Pixel vertical
+
+def set_resolution_480(cap):
+    cap.set(3,640) #Pixel horizontal
+    cap.set(4,480) #Pixel vertical
 
 
 def video_stream():
+    global is_HeatMap_Running;
+    global heatmap
+
     # construct the argument parse and parse the arguments
     # ap = argparse.ArgumentParser()
     # ap.add_argument("-p", "--shape-predictor", required=True,
@@ -20,19 +38,45 @@ def video_stream():
 
     # initialize the video stream and allow the cammera sensor to warmup
     print("[INFO] Preparando a câmera...")
-    vs = VideoStream(0).start()
+    cap = cv2.VideoCapture(0)
+
+    set_resolution_480(cap)
+
     time.sleep(1.0)
     
     land_mark = LandMark();
     head_pose = HeadPose(cv2);
 
+    i = 0
+    k = 0
+
     # Loop de frames do video
     while True:
         # Captura o frame
-        frame = vs.read()
+        ret,frame = cap.read()
 
-        if (None is not frame):
-            frame = imutils.resize(frame, width=400, height=400)
+        key = cv2.waitKey(1) & 0xFF
+        # if the `q` key was pressed, break from the loop
+        if key == ord("q"):
+            break;
+        if key == ord("i"):
+
+            if(0 <= i < 15 and
+                0 <= k < 30):
+
+                heatmap.incrementa(i,k)
+                i += 1;
+                k += 1;
+            else:
+                i = 0
+                k = 0
+
+        if (None is frame):
+            print("[ERROR] FALHA NA CAPTURA DO VIDEO!!")
+            print("[ERROR] TENTANDO NOVAMENTE")
+            continue
+
+        frame = cv2.flip(frame, 1)
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -52,25 +96,27 @@ def video_stream():
 
         # show the frame
         cv2.imshow("Frame", frame)
-        key = cv2.waitKey(1) & 0xFF
 
-        # if the `q` key was pressed, break from the loop
-        if key == ord("q"):
-            break;
-
-    is_Heat_Map_Running = False;
-    vs.stop()
+    is_HeatMap_Running = False;
     cv2.destroyAllWindows();
+    cap.release()
 
+    return
 
 def heat_map_thread():
-    global heat_map
-    heat_map = HeatMaping();
+    global heatmap
+    global is_HeatMap_Running;
 
-    is_Heat_Map_Running = True;
+    heatmap = HeatMap();
+    heatmap.show_map();
 
-    while is_Heat_Map_Running:
-        heat_map.show_map();
+    is_HeatMap_Running = True;
+
+    while is_HeatMap_Running:
+
+        if ( heatmap.IS_CHANGED ):
+            heatmap.show_map();
+
         # Atualizar os valores do heatmap
         # Salvar a imagem em um arquivo
         # Plotar em uma janela separada o heatmap sempre atualizado
@@ -81,8 +127,6 @@ def heat_map_thread():
 
 if __name__ == "__main__":
 
-    global is_Heat_Map_Running;
-    is_Heat_Map_Running = True;
     heat_thread = th.Thread(target=heat_map_thread)
     heat_thread.start();
 
