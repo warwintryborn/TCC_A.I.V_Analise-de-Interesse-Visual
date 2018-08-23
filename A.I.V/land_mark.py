@@ -18,6 +18,7 @@ class LandMark():
     def get_land_mark(self):
         rects = self.detector(self.gray, 1);
         self.__face.clear();
+        self.aux = []
 
         # loop over the face detections
         for (i, rect) in enumerate(rects):
@@ -26,6 +27,8 @@ class LandMark():
             # array
             self.__shape = self.predictor(self.gray, rect)
             self.__shape = face_utils.shape_to_np(self.__shape)
+
+            self.aux.append(self.__shape)
 
             QUEIXO = self.__shape[8];
             NARIZ = self.__shape[30];
@@ -47,7 +50,7 @@ class LandMark():
 
     @property
     def shape(self):
-        return self.__shape
+        return self.aux
 
 if (__name__ == '__main__'):
     lm = LandMark

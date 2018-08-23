@@ -13,13 +13,14 @@ from matplotlib import mlab as ML
 import numpy as NP
 
 
-class HeatMaping:
+class HeatMap:
     __WIDTH = 30
     __HIGHT = 15
     __VALOR_INCREMENTAL = 4
     __VALOR_INCREMENTAL_PERIFERIA = __VALOR_INCREMENTAL/2
     __HEATTYPE = 'jet'
     __RAIO = 2
+    IS_CHANGED = False;
 
     @property
     def resolucao(self):
@@ -65,6 +66,7 @@ class HeatMaping:
 
         self.heatArray[x][y] = self.__VALOR_INCREMENTAL
         self.__VALOR_INCREMENTAL += 5
+        self.IS_CHANGED = True;
         return;
 
         __heat = [8];
@@ -108,6 +110,8 @@ class HeatMaping:
 
             self.clb.set_clim(vmin=vmin,vmax=vmax);
 
+            self.IS_CHANGED = False;
+
             PLT.pause(0.01)
         except:
             error = sys.exc_info()[0]
@@ -130,7 +134,7 @@ class HeatMaping:
 
 if (__name__ == '__main__' ):
 
-    hm = HeatMaping()
+    hm = HeatMap()
 
     for i in range(14, -1, -1):
         for k in range(30):
