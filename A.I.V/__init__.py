@@ -7,21 +7,25 @@ from land_mark import LandMark
 from head_pose import HeadPose
 from heatmap import HeatMap
 
+
 def set_resolution_1080(cap):
-    cap.set(3,1920) #Pixel horizontal
-    cap.set(4,1080) #Pixel vertical
+    cap.set(3, 1920)  # Pixel horizontal
+    cap.set(4, 1080)  # Pixel vertical
+
 
 def set_resolution_900(cap):
-    cap.set(3,1600) #Pixel horizontal
-    cap.set(4,900) #Pixel vertical
+    cap.set(3, 1600)  # Pixel horizontal
+    cap.set(4, 900)  # Pixel vertical
+
 
 def set_resolution_720(cap):
-    cap.set(3,1280) #Pixel horizontal
-    cap.set(4,720) #Pixel vertical
+    cap.set(3, 1280)  # Pixel horizontal
+    cap.set(4, 720)  # Pixel vertical
+
 
 def set_resolution_480(cap):
-    cap.set(3,640) #Pixel horizontal
-    cap.set(4,480) #Pixel vertical
+    cap.set(3, 640)  # Pixel horizontal
+    cap.set(4, 480)  # Pixel vertical
 
 
 def video_stream():
@@ -43,7 +47,7 @@ def video_stream():
     set_resolution_480(cap)
 
     time.sleep(1.0)
-    
+
     land_mark = LandMark();
     head_pose = HeadPose(cv2);
 
@@ -53,23 +57,12 @@ def video_stream():
     # Loop de frames do video
     while True:
         # Captura o frame
-        ret,frame = cap.read()
+        ret, frame = cap.read()
 
         key = cv2.waitKey(1) & 0xFF
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             break;
-        if key == ord("i"):
-
-            if(0 <= i < 15 and
-                0 <= k < 30):
-
-                heatmap.incrementa(i,k)
-                i += 1;
-                k += 1;
-            else:
-                i = 0
-                k = 0
 
         if (None is frame):
             print("[ERROR] FALHA NA CAPTURA DO VIDEO!!")
@@ -85,9 +78,9 @@ def video_stream():
 
         mapa = land_mark.get_land_mark();
 
-        if (None is not mapa): #Encontrou alguns rostos
+        if (None is not mapa):  # Encontrou alguns rostos
 
-            for face in mapa:   #Loop pelos rostos encontrados
+            for face in mapa:  # Loop pelos rostos encontrados
                 for (x, y) in face:
                     cv2.circle(frame, (int(x), int(y)), 2, (0, 0, 255), -1)
 
@@ -103,30 +96,24 @@ def video_stream():
 
     return
 
+
 def heat_map_thread():
     global heatmap
     global is_HeatMap_Running;
 
     heatmap = HeatMap();
-    heatmap.show_map();
 
     is_HeatMap_Running = True;
 
     while is_HeatMap_Running:
 
-        if ( heatmap.IS_CHANGED ):
-            heatmap.show_map();
+        # if (heatmap.IS_CHANGED):
+        heatmap.show_map();
 
-        # Atualizar os valores do heatmap
-        # Salvar a imagem em um arquivo
-        # Plotar em uma janela separada o heatmap sempre atualizado
-        '''
-        Mostrar heatmap em paralelo com o video
-        '''
     return;
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     heat_thread = th.Thread(target=heat_map_thread)
     heat_thread.start();
 
