@@ -23,21 +23,16 @@ class HeatMap:
     IS_CHANGED = False;
 
     @property
-    def resolucao(self):
-        return self.__RESOLUCAO;
+    def width(self):
+        return self.__WIDTH;
 
-    @resolucao.setter
-    def resolucao(self, value):
-        self.__RESOLUCAO = int(value);
+    @property
+    def higth(self):
+        return self.__HIGHT;
 
     @property
     def heatArray(self):
         return self.__heatValue
-
-    @heatArray.setter
-    def heatArray(self, value):
-        if (value.size == self.__RESOLUCAO):
-            self.__heatValue = value;
 
     def __init__(self):
         try:
@@ -135,20 +130,19 @@ class HeatMap:
 if (__name__ == '__main__' ):
 
     hm = HeatMap()
-    hm2 = HeatMap()
+    # hm2 = HeatMap()
 
-    hm.incrementa(5, 13)
-    # hm.show_map()
+    # hm.incrementa(5, 13)
+    # # hm.show_map()
+    #
+    # hm2.incrementa(10, 8)
+    # # hm2.show_map()
 
-    hm2.incrementa(10, 8)
-    # hm2.show_map()
-
-    # for i in range(30):
-    #     for k in range(15):
-    #         hm.incrementa(k, i)
-    #         hm.show_map()
+    for i in range(hm.width):
+        for k in range(hm.higth):
+            hm.incrementa(k, i)
 
     hm.reset_map()
-    hm2.reset_map();
+    # hm2.reset_map();
 
     exit()
