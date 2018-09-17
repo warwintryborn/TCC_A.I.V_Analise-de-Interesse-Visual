@@ -13,6 +13,10 @@ import numpy as np
 
 class HeadPose():
 
+    @property
+    def vitrine_poins(self):
+        return self.__vitrine_points
+
     def __init__(self, cv):
         self.cv = cv;
         self.dist_coeffs = np.zeros((4, 1))  # Assuming no lens distortion
@@ -27,10 +31,12 @@ class HeadPose():
             (150.0, -150.0, -125.0)  # Right mouth corner
 
         ])
+        self.__vitrine_points = (0, 0);
 
     def set_video(self, stream):
         im = stream;
         size = im.shape
+
         # Camera internals
 
         focal_length = size[1]
@@ -40,8 +46,6 @@ class HeadPose():
              [0, focal_length, center[1]],
              [0, 0, 1]], dtype="double"
         )
-
-    #        print ("Camera Matrix :\n {0}".format(self.camera_matrix))
 
     def get_line_points(self, face_points):
         image_points = face_points;
@@ -53,23 +57,14 @@ class HeadPose():
         if (not success):
             return None;
 
-        #        print ("Rotation Vector:\n {0}".format(rotation_vector))
-        #        print ("Translation Vector:\n {0}".format(translation_vector))
+        (vitrine_points2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, translation_vector)]), rotation_vector,
+                                                         translation_vector, self.camera_matrix, self.dist_coeffs)
 
-        '''
-        Translate Vector:
-            [ Rosto para direita (+) Rosto para esqueda (-)
-            
-            ]
-        Rotation Vector:
-            [
-            Virar o rosto para direita (+) para a esquerda (-)
-            ]
-        '''
+        self.__vitrine_points = (int(vitrine_points2D[0][0][0]), int(vitrine_points2D[0][0][1]))
 
-        # Project a 3D point (0, 0, 1000.0) onto the image plane.
         # We use this to draw a line sticking out of the nose
-        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector,
+        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 0.5 * translation_vector)]),
+                                                         rotation_vector,
                                                          translation_vector, self.camera_matrix, self.dist_coeffs)
 
         p1 = (int(image_points[0][0]), int(image_points[0][1]))
@@ -79,5 +74,6 @@ class HeadPose():
 
         return line_points;
 
-if ( __name__ == '__main__'):
+
+if (__name__ == '__main__'):
     hp = HeadPose
