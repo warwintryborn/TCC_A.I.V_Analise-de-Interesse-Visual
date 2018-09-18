@@ -4,6 +4,8 @@ Created on Mon Jul 30 18:34:19 2018
 
 @author: ggoncalves
 """
+import datetime as dt;
+import random
 import sys
 
 from matplotlib import pyplot as PLT
@@ -11,6 +13,7 @@ from matplotlib import cbook as CBOOK
 # from scipy.misc import imread
 from matplotlib import mlab as ML
 import numpy as NP
+import threading as th
 
 
 class HeatMap:
@@ -20,7 +23,6 @@ class HeatMap:
     __VALOR_INCREMENTAL_PERIFERIA = __VALOR_INCREMENTAL/2
     __HEATTYPE = 'jet'
     __RAIO = 2
-    IS_CHANGED = False;
 
     @property
     def width(self):
@@ -34,14 +36,17 @@ class HeatMap:
     def heatArray(self):
         return self.__heatValue
 
-    def __init__(self):
+    def get_titulo(self):
+        return self.titulo
+
+    def __init__(self, titulo=""):
         try:
             # datafile = CBOOK.get_sample_data('C:\Gustavo\Stuffs\GitHub\TCC\A.I.V\maua2.png')
             # img = PLT.imread(datafile)
-
+            self.titulo = titulo;
             # create the figure
             PLT.rcParams['toolbar'] = 'None'
-            self.fig = PLT.figure()
+            self.fig = PLT.figure(self.titulo)
             PLT.set_cmap(self.__HEATTYPE)
 
             ax = self.fig.add_subplot(111)
@@ -52,12 +57,17 @@ class HeatMap:
 
             self.config_heat_fig();
 
-            self.show_map();
+            self.reset_map();
         except:
             error = sys.exc_info()[0]
             print("Unexpected error:", error)
 
-    def incrementa(self, x, y):
+    def incrementa(self, coord):
+
+        x = coord[0];
+        y = coord[1];
+
+        self.__VALOR_INCREMENTAL = random.randrange(0,10)
 
         if (0 > x > self.__WIDTH or 0 > y > self.__HIGHT):
             #Adicionar mensagem de erro!!
@@ -121,28 +131,39 @@ class HeatMap:
         titulo_janela.canvas.set_window_title('Análise de Interesse Visual - Heatmap vitrine')
         PLT.axis('off');
         PLT.suptitle("A.I.V.", fontsize=32);
-        PLT.title("Vitrine", fontsize=12);
+        PLT.title(self.titulo, fontsize=12);
 
     def reset_map(self):
         self.__heatValue = NP.zeros((self.__HIGHT, self.__WIDTH))  # random.random((self.__HIGHT, self.__WIDTH))
         self.show_map();
 
+    def salve_map(self):
+        try:
+            time = dt.datetime.now().strftime("%Y-%m-%d");
+            path = "Vitrines/{0}_{1}.png".format(self.titulo,time);
+            self.fig.savefig(path);
+        except:
+            error = sys.exc_info()[0]
+            print("Unexpected error:", error)
+
+
+
 if (__name__ == '__main__' ):
 
-    hm = HeatMap()
-    # hm2 = HeatMap()
+    heatmap2 = HeatMap("Global");
+    heatmap = HeatMap("Usuario");
 
-    # hm.incrementa(5, 13)
-    # # hm.show_map()
-    #
-    # hm2.incrementa(10, 8)
-    # # hm2.show_map()
+    for i in range(heatmap.width):
+        for k in range(heatmap.higth):
+            heatmap.incrementa((k, i));
+    for i in range(heatmap.width):
+        for k in range(heatmap.higth):
+            heatmap2.incrementa((k, i));
 
-    for i in range(hm.width):
-        for k in range(hm.higth):
-            hm.incrementa(k, i)
+    heatmap.salve_map();
+    heatmap2.salve_map();
 
-    hm.reset_map()
-    # hm2.reset_map();
+    heatmap.reset_map()
+    heatmap2.reset_map();
 
     exit()
