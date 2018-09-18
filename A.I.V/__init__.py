@@ -50,16 +50,15 @@ def video_stream():
 
     land_mark = LandMark();
     head_pose = HeadPose(cv2);
-
-    i = 0
-    k = 0
+    heatmap_global = HeatMap("Diário");
+    heatmap_usuario = HeatMap("Usuário");
 
     # Loop de frames do video
     while True:
         # Captura o frame
         ret, frame = cap.read()
 
-        key = cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(10) & 0xFF
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             break;
@@ -73,8 +72,8 @@ def video_stream():
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        land_mark.set_video(gray);
-        head_pose.set_video(gray);
+        land_mark.set_frame(gray);
+        head_pose.set_frame(gray);
 
         mapa = land_mark.get_land_mark();
 
@@ -87,35 +86,24 @@ def video_stream():
                 points = head_pose.get_line_points(face);
                 cv2.arrowedLine(frame, points[0], points[1], (255, 0, 0), 2)
 
+                # Adicionar regra de tempo para saber a partir de quanto tempo começa a contar
+                if ( head_pose.vitrine_poins != None ):
+                    heatmap_global.incrementa(head_pose.vitrine_poins)
+
+
         # show the frame
         cv2.imshow("Frame", frame)
 
-    is_HeatMap_Running = False;
+
+    heatmap_global.salve_map()
+    heatmap_usuario.salve_map()
+
     cv2.destroyAllWindows();
     cap.release()
 
     return
 
-
-def heat_map_thread():
-    global heatmap
-    global is_HeatMap_Running;
-
-    heatmap = HeatMap();
-
-    is_HeatMap_Running = True;
-
-    while is_HeatMap_Running:
-
-        # if (heatmap.IS_CHANGED):
-        heatmap.show_map();
-
-    return;
-
-
 if __name__ == "__main__":
-    heat_thread = th.Thread(target=heat_map_thread)
-    heat_thread.start();
 
     video_stream()
 
