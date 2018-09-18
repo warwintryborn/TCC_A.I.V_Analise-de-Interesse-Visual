@@ -33,8 +33,8 @@ class HeadPose():
         ])
         self.__vitrine_points = (0, 0);
 
-    def set_video(self, stream):
-        im = stream;
+    def set_frame(self, frame):
+        im = frame;
         size = im.shape
 
         # Camera internals

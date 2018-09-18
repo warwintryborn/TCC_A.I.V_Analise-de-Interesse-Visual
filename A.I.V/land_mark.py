@@ -12,11 +12,11 @@ class LandMark():
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor("./face_predictor/shape_predictor_68_face_landmarks.dat")
 
-    def set_video(self, gray):
-        self.gray = gray;
+    def set_frame(self, frame):
+        self.frame = frame;
 
     def get_land_mark(self):
-        rects = self.detector(self.gray, 1);
+        rects = self.detector(self.frame, 1);
         self.__face.clear();
         self.aux = []
 
@@ -25,7 +25,7 @@ class LandMark():
             # determine the facial landmarks for the face region, then
             # convert the facial landmark (x, y)-coordinates to a NumPy
             # array
-            self.__shape = self.predictor(self.gray, rect)
+            self.__shape = self.predictor(self.frame, rect)
             self.__shape = face_utils.shape_to_np(self.__shape)
 
             self.aux.append(self.__shape)
