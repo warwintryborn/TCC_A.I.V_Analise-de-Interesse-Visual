@@ -13,7 +13,6 @@ from matplotlib import cbook as CBOOK
 # from scipy.misc import imread
 from matplotlib import mlab as ML
 import numpy as NP
-import threading as th
 
 
 class HeatMap:
@@ -41,7 +40,7 @@ class HeatMap:
 
     def __init__(self, titulo=""):
         try:
-            # datafile = CBOOK.get_sample_data('C:\Gustavo\Stuffs\GitHub\TCC\A.I.V\maua2.png')
+            # datafile = CBOOK.get_sample_data('Vitrines/maua.png')
             # img = PLT.imread(datafile)
             self.titulo = titulo;
             # create the figure
@@ -139,13 +138,26 @@ class HeatMap:
 
     def salve_map(self):
         try:
+            extensao = ".png"
             time = dt.datetime.now().strftime("%Y-%m-%d");
-            path = "Vitrines/{0}_{1}.png".format(self.titulo,time);
-            self.fig.savefig(path);
+            path = "Vitrines/imagens/{0}_{1}".format(self.titulo,time);
+            self.fig.savefig(path + extensao);
+            path = path.replace("imagens","numpy");
+            NP.save(path,self.__heatValue);
         except:
             error = sys.exc_info()[0]
             print("Unexpected error:", error)
 
+    def load_map(self):
+        try:
+            extensao = ".npy"
+            time = dt.datetime.now().strftime("%Y-%m-%d");
+            path = "Vitrines/numpy/{0}_{1}".format(self.titulo, time);
+            self.__heatValue = NP.load(path + extensao);
+            self.show_map();
+        except:
+            error = sys.exc_info()[0]
+            print("Unexpected error:", error)
 
 
 if (__name__ == '__main__' ):
@@ -165,5 +177,8 @@ if (__name__ == '__main__' ):
 
     heatmap.reset_map()
     heatmap2.reset_map();
+
+    heatmap.load_map();
+    heatmap2.load_map();
 
     exit()
