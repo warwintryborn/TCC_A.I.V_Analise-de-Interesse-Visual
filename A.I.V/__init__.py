@@ -38,7 +38,7 @@ def video_stream():
     # args = vars(ap.parse_args())
 
     # initialize the video stream and allow the cammera sensor to warmup
-    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_a_c
+    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_a_c, divisao_x_y
 
     print("[INFO] Preparando a câmera...")
     cap = cv2.VideoCapture(0)
@@ -101,7 +101,10 @@ def video_stream():
 
         if key == ord("c"):
             if ( sup_esq != None and sup_dir != None and inf_esq != None and inf_dir != None):
-                vitrine_a_c =  calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
+                vitrine_a_c = calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
+                divisao_x_y = [2]
+                divisao_x_y[0] = int(vitrine_a_c[0] / heatmap_global.width);
+                divisao_x_y[1] = int(vitrine_a_c[1] / heatmap_global.higth);
                 print("[INFO] Calibração feita!!");
 
         if (None is frame):
@@ -129,8 +132,11 @@ def video_stream():
 
                 # Adicionar regra de tempo para saber a partir de quanto tempo começa a contar
                 if ( head_pose.vitrine_points != None):
-                    pontos = global2heat(sup_esq, vitrine_a_c);
-                    heatmap_global.incrementa(pontos)
+
+
+                    if ( sup_esq != None and vitrine_a_c != None ):
+                        coordenada_heat = global2heat(sup_esq, head_pose.vitrine_points);
+                        heatmap_global.incrementa(coordenada_heat)
 
 
         # show the frame
@@ -149,19 +155,20 @@ def video_stream():
 
 def calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir):
 
-    largura = sup_esq[0] - sup_dir[0];
-    altura = sup_esq[1] - inf_esq[1];
+    largura = abs(sup_esq[0]) - abs(sup_dir[0]);
+    altura = abs(sup_esq[1]) - abs(inf_esq[1]);
 
     return (largura, altura)
 
 
-def global2heat(sup_esq, vitrine_a_c):
-    pontos_vitrine = [2];
+def global2heat(ponto_zero, vitrine_points):
+    global divisao_x_y;
+    pontos_heat = [2];
 
-    pontos_vitrine[0] = sup_esq[0] + vitrine_a_c[0]
-    pontos_vitrine[1] = sup_esq[1] + vitrine_a_c[1]
+    pontos_heat[0] = int((ponto_zero[0] + vitrine_points[0]) / divisao_x_y[0]);
+    pontos_heat[1] = int((ponto_zero[1] + vitrine_points[1]) / divisao_x_y[1]);
 
-    return pontos_vitrine
+    return pontos_heat
 
 
 if __name__ == "__main__":
