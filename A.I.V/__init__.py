@@ -2,7 +2,6 @@
 
 import time
 import cv2
-import threading as th
 from land_mark import LandMark
 from head_pose import HeadPose
 from heatmap import HeatMap
@@ -29,8 +28,6 @@ def set_resolution_480(cap):
 
 
 def video_stream():
-    global is_HeatMap_Running;
-    global heatmap
 
     # construct the argument parse and parse the arguments
     # ap = argparse.ArgumentParser()
@@ -41,6 +38,8 @@ def video_stream():
     # args = vars(ap.parse_args())
 
     # initialize the video stream and allow the cammera sensor to warmup
+    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_a_c
+
     print("[INFO] Preparando a câmera...")
     cap = cv2.VideoCapture(0)
 
@@ -58,10 +57,52 @@ def video_stream():
         # Captura o frame
         ret, frame = cap.read()
 
-        key = cv2.waitKey(10) & 0xFF
+        key = cv2.waitKey(100) & 0xFF
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             break;
+        if key == ord("s"):
+            heatmap_global.salve_map();
+            heatmap_usuario.salve_map();
+            print("[INFO] HeatMap salvo!!");
+
+        if key == ord("r"):
+            heatmap_usuario.reset_map();
+            print("[INFO] HeatMap resetado!!");
+
+        if key == ord("b"):
+            comecar_leitura_unica = True;
+            print("[INFO] Leitura de usuário começado!!");
+        if key == ord("e"):
+            comecar_leitura_unica = False;
+            print("[INFO] Leitura de usuário parado!!");
+
+        if (head_pose.vitrine_points != None):
+            if key == ord("7"):
+                sup_esq = head_pose.vitrine_points;
+                print("[INFO] Ponto superior esquerdo capturado!!");
+            if key == ord("9"):
+                sup_dir = head_pose.vitrine_points;
+                print("[INFO] Ponto superior direito capturado!!");
+            if key == ord("1"):
+                inf_esq = head_pose.vitrine_points;
+                print("[INFO] Ponto inferor esquerdo capturado!!");
+            if key == ord("3"):
+                inf_dir = head_pose.vitrine_points;
+                print("[INFO] Ponto inferior direito capturado!!");
+
+        if key == ord("5"):
+            sup_esq = None;
+            sup_dir = None;
+            inf_esq = None;
+            inf_dir = None;
+            vitrine_a_c = None;
+            print("[INFO] Calibração resetada!!");
+
+        if key == ord("c"):
+            if ( sup_esq != None and sup_dir != None and inf_esq != None and inf_dir != None):
+                vitrine_a_c =  calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
+                print("[INFO] Calibração feita!!");
 
         if (None is frame):
             print("[ERROR] FALHA NA CAPTURA DO VIDEO!!")
@@ -87,13 +128,15 @@ def video_stream():
                 cv2.arrowedLine(frame, points[0], points[1], (255, 0, 0), 2)
 
                 # Adicionar regra de tempo para saber a partir de quanto tempo começa a contar
-                if ( head_pose.vitrine_poins != None ):
-                    heatmap_global.incrementa(head_pose.vitrine_poins)
+                if ( head_pose.vitrine_points != None):
+                    pontos = global2heat(sup_esq, vitrine_a_c);
+                    heatmap_global.incrementa(pontos)
 
 
         # show the frame
         cv2.imshow("Frame", frame)
-
+        heatmap_global.show_map()
+        heatmap_usuario.show_map()
 
     heatmap_global.salve_map()
     heatmap_usuario.salve_map()
@@ -102,6 +145,24 @@ def video_stream():
     cap.release()
 
     return
+
+
+def calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir):
+
+    largura = sup_esq[0] - sup_dir[0];
+    altura = sup_esq[1] - inf_esq[1];
+
+    return (largura, altura)
+
+
+def global2heat(sup_esq, vitrine_a_c):
+    pontos_vitrine = [2];
+
+    pontos_vitrine[0] = sup_esq[0] + vitrine_a_c[0]
+    pontos_vitrine[1] = sup_esq[1] + vitrine_a_c[1]
+
+    return pontos_vitrine
+
 
 if __name__ == "__main__":
 

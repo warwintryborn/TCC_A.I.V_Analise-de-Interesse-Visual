@@ -14,7 +14,7 @@ import numpy as np
 class HeadPose():
 
     @property
-    def vitrine_poins(self):
+    def vitrine_points(self):
         return self.__vitrine_points
 
     def __init__(self, cv):
