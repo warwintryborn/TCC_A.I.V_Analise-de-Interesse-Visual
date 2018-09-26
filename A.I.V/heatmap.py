@@ -66,43 +66,51 @@ class HeatMap:
         x = coord[0];
         y = coord[1];
 
-        self.__VALOR_INCREMENTAL = random.randrange(0,10)
+        try:
+            # self.__VALOR_INCREMENTAL = random.randrange(0,10)
+            
+            if x < 0:
+                return
+            if x >= self.__WIDTH:
+                return
+            if y < 0:
+                return
+            if y >= self.__HIGHT:
+                return
 
-        if (0 > x > self.__WIDTH or 0 > y > self.__HIGHT):
-            #Adicionar mensagem de erro!!
-            return;
+            self.__heatValue[x][y] += self.__VALOR_INCREMENTAL;  # centro
+            for i in range(1, self.__RAIO):
 
-        self.__heatValue[x][y] += self.__VALOR_INCREMENTAL;  # centro
+                direita = x + i;
+                esquerda = x - i;
+                cima = y + i;
+                baixo = y - i;
 
-        for i in range(1, self.__RAIO):
+                if( direita <= self.__HIGHT ):
+                    self.__heatValue[direita][y] += self.__VALOR_INCREMENTAL;  # direita
+                    if (cima <= self.__WIDTH):
+                        self.__heatValue[direita][cima] += self.__VALOR_INCREMENTAL_PERIFERIA;  # direita em cima
+                    if (0 < baixo):
+                        self.__heatValue[direita][baixo] += self.__VALOR_INCREMENTAL_PERIFERIA;  # direita em baixo
 
-            direita = x + i;
-            esquerda = x - i;
-            cima = y + i;
-            baixo = y - i;
+                if( 0 < esquerda ):
+                    self.__heatValue[esquerda][y] += self.__VALOR_INCREMENTAL;  # esquerda
+                    if (cima <= self.__WIDTH):
+                        self.__heatValue[esquerda][cima] += self.__VALOR_INCREMENTAL_PERIFERIA;  # esquerda em cima
+                    if (0 < baixo):
+                        self.__heatValue[esquerda][baixo] += self.__VALOR_INCREMENTAL_PERIFERIA;  # esquerda em baixo
 
-            if( direita < self.__HIGHT ):
-                self.__heatValue[direita][y] += self.__VALOR_INCREMENTAL;  # direita
-                if (cima < self.__WIDTH):
-                    self.__heatValue[direita][cima] += self.__VALOR_INCREMENTAL_PERIFERIA;  # direita em cima
-                if (0 < baixo):
-                    self.__heatValue[direita][baixo] += self.__VALOR_INCREMENTAL_PERIFERIA;  # direita em baixo
+                if( cima <= self.__WIDTH ):
+                    self.__heatValue[x][cima] += self.__VALOR_INCREMENTAL;  # cima
 
-            if( 0 < esquerda ):
-                self.__heatValue[esquerda][y] += self.__VALOR_INCREMENTAL;  # esquerda
-                if (cima < self.__WIDTH):
-                    self.__heatValue[esquerda][cima] += self.__VALOR_INCREMENTAL_PERIFERIA;  # esquerda em cima
-                if (0 < baixo):
-                    self.__heatValue[esquerda][baixo] += self.__VALOR_INCREMENTAL_PERIFERIA;  # esquerda em baixo
+                if( 0 < baixo):
+                    self.__heatValue[x][baixo] += self.__VALOR_INCREMENTAL;  # baixo
 
-            if( cima < self.__WIDTH ):
-                self.__heatValue[x][cima] += self.__VALOR_INCREMENTAL;  # cima
-
-            if( 0 < baixo):
-                self.__heatValue[x][baixo] += self.__VALOR_INCREMENTAL;  # baixo
-
-        self.IS_CHANGED = True;
-        self.show_map();
+            self.IS_CHANGED = True;
+            self.show_map();
+        except:
+            error = sys.exc_info()[0]
+            print("Unexpected error:", error, x ,y)
 
         return;
 
