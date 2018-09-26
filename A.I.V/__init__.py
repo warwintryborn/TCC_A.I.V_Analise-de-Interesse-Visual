@@ -40,6 +40,12 @@ def video_stream():
     # initialize the video stream and allow the cammera sensor to warmup
     global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_a_c, divisao_x_y
 
+    sup_esq = None;
+    sup_dir = None;
+    inf_esq = None;
+    inf_dir = None;
+    vitrine_a_c = None;
+
     print("[INFO] Preparando a câmera...")
     cap = cv2.VideoCapture(0)
 
@@ -68,6 +74,7 @@ def video_stream():
 
         if key == ord("r"):
             heatmap_usuario.reset_map();
+            heatmap_global.reset_map()
             print("[INFO] HeatMap resetado!!");
 
         if key == ord("b"):
@@ -102,7 +109,7 @@ def video_stream():
         if key == ord("c"):
             if ( sup_esq != None and sup_dir != None and inf_esq != None and inf_dir != None):
                 vitrine_a_c = calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
-                divisao_x_y = [2]
+                divisao_x_y = [0 , 0]
                 divisao_x_y[0] = int(vitrine_a_c[0] / heatmap_global.width);
                 divisao_x_y[1] = int(vitrine_a_c[1] / heatmap_global.higth);
                 print("[INFO] Calibração feita!!");
@@ -141,8 +148,8 @@ def video_stream():
 
         # show the frame
         cv2.imshow("Frame", frame)
-        heatmap_global.show_map()
-        heatmap_usuario.show_map()
+        # heatmap_global.show_map()
+        # heatmap_usuario.show_map()
 
     heatmap_global.salve_map()
     heatmap_usuario.salve_map()
@@ -155,18 +162,18 @@ def video_stream():
 
 def calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir):
 
-    largura = abs(sup_esq[0]) - abs(sup_dir[0]);
-    altura = abs(sup_esq[1]) - abs(inf_esq[1]);
+    largura = abs(sup_esq[0]) + abs(sup_dir[0]);
+    altura = abs(sup_esq[1]) + abs(inf_esq[1]);
 
-    return (largura, altura)
+    return (abs(largura), abs(altura))
 
 
 def global2heat(ponto_zero, vitrine_points):
     global divisao_x_y;
-    pontos_heat = [2];
+    pontos_heat = [-1, -1];
 
-    pontos_heat[0] = int((ponto_zero[0] + vitrine_points[0]) / divisao_x_y[0]);
-    pontos_heat[1] = int((ponto_zero[1] + vitrine_points[1]) / divisao_x_y[1]);
+    pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_x_y[0]);
+    pontos_heat[1] = int(abs(abs(ponto_zero[1]) + vitrine_points[1]) / divisao_x_y[1]);
 
     return pontos_heat
 
