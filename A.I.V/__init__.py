@@ -2,6 +2,8 @@
 
 import time
 import cv2
+from multipledispatch.conflict import super_signature
+
 from land_mark import LandMark
 from head_pose import HeadPose
 from heatmap import HeatMap
@@ -110,8 +112,8 @@ def video_stream():
             if ( sup_esq != None and sup_dir != None and inf_esq != None and inf_dir != None):
                 vitrine_larg_altu = calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
                 divisao_row_colum = [0 , 0]
-                divisao_row_colum[0] = int(vitrine_larg_altu[0] / heatmap_global.width);
-                divisao_row_colum[1] = int(vitrine_larg_altu[1] / heatmap_global.higth);
+                divisao_row_colum[1] = int(vitrine_larg_altu[0] / heatmap_global.width);
+                divisao_row_colum[0] = int(vitrine_larg_altu[1] / heatmap_global.higth);
                 print("[INFO] Calibração feita!!");
 
         if (None is frame):
@@ -167,11 +169,19 @@ def calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir):
 
 
 def global2heat(ponto_zero, vitrine_points):
-    global divisao_row_colum;
+    global divisao_row_colum, sup_esq, sup_dir, inf_esq, inf_dir;
     pontos_heat = [-1, -1];
 
-    pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_row_colum[0]);
-    pontos_heat[1] = int(abs(abs(ponto_zero[1]) + vitrine_points[1]) / divisao_row_colum[1]);
+    # if( vitrine_points[0] > ponto_zero[0] ):
+    #     if ( vitrine_points[0] > 0 ):
+    #         pontos_heat[0] = 30 - int((vitrine_points[0] - sup_dir[0]) / divisao_row_colum[1] /2)
+    #     else:
+    #         pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_row_colum[1] / 2);
+    pontos_heat[1] = 15;
+
+    # pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_row_colum[0]);
+    if( vitrine_points[1] > ponto_zero[1] ):
+        pontos_heat[0] = int(abs(abs(ponto_zero[1]) + vitrine_points[1]) / divisao_row_colum[0]);
 
     return pontos_heat
 
