@@ -38,13 +38,13 @@ def video_stream():
     # args = vars(ap.parse_args())
 
     # initialize the video stream and allow the cammera sensor to warmup
-    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_a_c, divisao_x_y
+    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_larg_altu, divisao_row_colum
 
     sup_esq = None;
     sup_dir = None;
     inf_esq = None;
     inf_dir = None;
-    vitrine_a_c = None;
+    vitrine_larg_altu = None;
 
     print("[INFO] Preparando a câmera...")
     cap = cv2.VideoCapture(0)
@@ -103,15 +103,15 @@ def video_stream():
             sup_dir = None;
             inf_esq = None;
             inf_dir = None;
-            vitrine_a_c = None;
+            vitrine_larg_altu = None;
             print("[INFO] Calibração resetada!!");
 
         if key == ord("c"):
             if ( sup_esq != None and sup_dir != None and inf_esq != None and inf_dir != None):
-                vitrine_a_c = calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
-                divisao_x_y = [0 , 0]
-                divisao_x_y[0] = int(vitrine_a_c[0] / heatmap_global.width);
-                divisao_x_y[1] = int(vitrine_a_c[1] / heatmap_global.higth);
+                vitrine_larg_altu = calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
+                divisao_row_colum = [0 , 0]
+                divisao_row_colum[0] = int(vitrine_larg_altu[0] / heatmap_global.width);
+                divisao_row_colum[1] = int(vitrine_larg_altu[1] / heatmap_global.higth);
                 print("[INFO] Calibração feita!!");
 
         if (None is frame):
@@ -141,15 +141,13 @@ def video_stream():
                 if ( head_pose.vitrine_points != None):
 
 
-                    if ( sup_esq != None and vitrine_a_c != None ):
+                    if ( sup_esq != None and vitrine_larg_altu != None):
                         coordenada_heat = global2heat(sup_esq, head_pose.vitrine_points);
                         heatmap_global.incrementa(coordenada_heat)
 
 
         # show the frame
         cv2.imshow("Frame", frame)
-        # heatmap_global.show_map()
-        # heatmap_usuario.show_map()
 
     heatmap_global.salve_map()
     heatmap_usuario.salve_map()
@@ -169,11 +167,11 @@ def calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir):
 
 
 def global2heat(ponto_zero, vitrine_points):
-    global divisao_x_y;
+    global divisao_row_colum;
     pontos_heat = [-1, -1];
 
-    pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_x_y[0]);
-    pontos_heat[1] = int(abs(abs(ponto_zero[1]) + vitrine_points[1]) / divisao_x_y[1]);
+    pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_row_colum[0]);
+    pontos_heat[1] = int(abs(abs(ponto_zero[1]) + vitrine_points[1]) / divisao_row_colum[1]);
 
     return pontos_heat
 
