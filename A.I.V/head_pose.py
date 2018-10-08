@@ -57,12 +57,6 @@ class HeadPose():
         if (not success):
             return None;
 
-        (vitrine_points2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, -translation_vector[2])]), rotation_vector,
-                                                         translation_vector, self.camera_matrix, self.dist_coeffs)
-
-        self.__vitrine_points = (int(vitrine_points2D[0][0][0]), int(vitrine_points2D[0][0][1]))
-        print(self.__vitrine_points)
-
         # We use this to draw a line sticking out of the nose
         (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, -0.5 * translation_vector[2])]),
                                                          rotation_vector,
@@ -71,6 +65,8 @@ class HeadPose():
         p1 = (int(image_points[0][0]), int(image_points[0][1]))
         p2 = (int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
 
+        self.__vitrine_points = ( p1[0] - p2[0], p1[1] - p2[1] );
+        print(self.__vitrine_points)
         line_points = (p1, p2)
 
         return line_points;

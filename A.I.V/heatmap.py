@@ -63,8 +63,8 @@ class HeatMap:
 
     def incrementa(self, coord):
 
-        linha = coord[0];
-        coluna = coord[1];
+        linha = coord[1];
+        coluna = coord[0];
 
         try:
             # self.__VALOR_INCREMENTAL = random.randrange(0,10)

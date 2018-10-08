@@ -172,16 +172,11 @@ def global2heat(ponto_zero, vitrine_points):
     global divisao_colum_row, sup_esq, sup_dir, inf_esq, inf_dir;
     pontos_heat = [-1, -1];
 
-    # if( vitrine_points[0] > ponto_zero[0] ):
-    #     if ( vitrine_points[0] > 0 ):
-    #         pontos_heat[0] = 30 - int((vitrine_points[0] - sup_dir[0]) / divisao_colum_row[1] /2)
-    #     else:
-    #         pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_colum_row[1] / 2);
-    pontos_heat[1] = 15;
+    if( vitrine_points[0] < ponto_zero[0] ):
+        pontos_heat[0] = int(abs(ponto_zero[0] - vitrine_points[0]) / divisao_colum_row[0]);
 
-    # pontos_heat[0] = int(abs(abs(ponto_zero[0]) + vitrine_points[0]) / divisao_colum_row[0]);
-    if( vitrine_points[1] > ponto_zero[1] ):
-        pontos_heat[0] = int(abs(abs(ponto_zero[1]) + vitrine_points[1]) / divisao_colum_row[0]);
+    if( vitrine_points[1] < ponto_zero[1] ):
+        pontos_heat[1] = int(abs(ponto_zero[1] - vitrine_points[1]) / divisao_colum_row[1]);
 
     return pontos_heat
 
