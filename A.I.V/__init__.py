@@ -40,13 +40,14 @@ def video_stream():
     # args = vars(ap.parse_args())
 
     # initialize the video stream and allow the cammera sensor to warmup
-    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_larg_altu, divisao_colum_row
+    global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_larg_altu, divisao_colum_row, comecar_leitura_unica
 
     sup_esq = None;
     sup_dir = None;
     inf_esq = None;
     inf_dir = None;
     vitrine_larg_altu = None;
+    comecar_leitura_unica = False;
 
     print("[INFO] Preparando a câmera...")
     cap = cv2.VideoCapture(0)
@@ -76,8 +77,8 @@ def video_stream():
 
         if key == ord("r"):
             heatmap_usuario.reset_map();
-            heatmap_global.reset_map()
-            print("[INFO] HeatMap resetado!!");
+            # heatmap_global.reset_map()
+            print("[INFO] HeatMap resetaqdo!!");
 
         if key == ord("b"):
             comecar_leitura_unica = True;
@@ -130,6 +131,8 @@ def video_stream():
 
         mapa = land_mark.get_land_mark();
 
+        primeiro_elemento = True;
+
         if (None is not mapa):  # Encontrou alguns rostos
 
             for face in mapa:  # Loop pelos rostos encontrados
@@ -142,11 +145,13 @@ def video_stream():
                 # Adicionar regra de tempo para saber a partir de quanto tempo começa a contar
                 if ( head_pose.vitrine_points != None):
 
-
                     if ( sup_esq != None and vitrine_larg_altu != None):
                         coordenada_heat = global2heat(sup_esq, head_pose.vitrine_points);
                         heatmap_global.incrementa(coordenada_heat)
 
+                        if ( primeiro_elemento and comecar_leitura_unica ):
+                            primeiro_elemento = False;
+                            heatmap_usuario.incrementa(coordenada_heat);
 
         # show the frame
         cv2.imshow("Frame", frame)
