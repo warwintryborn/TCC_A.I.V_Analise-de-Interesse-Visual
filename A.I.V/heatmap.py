@@ -16,12 +16,12 @@ import numpy as NP
 
 
 class HeatMap:
-    __WIDTH = 30
-    __HIGHT = 15
+    __WIDTH = 9
+    __HIGHT = 6
     __VALOR_INCREMENTAL = 4
     __VALOR_INCREMENTAL_PERIFERIA = __VALOR_INCREMENTAL/2
     __HEATTYPE = 'jet'
-    __RAIO = 2
+    __RAIO = 0
 
     @property
     def width(self):
