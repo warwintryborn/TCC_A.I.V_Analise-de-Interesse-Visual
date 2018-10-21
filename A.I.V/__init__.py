@@ -42,10 +42,10 @@ def video_stream():
     # initialize the video stream and allow the cammera sensor to warmup
     global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_larg_altu, divisao_colum_row, comecar_leitura_unica
 
-    sup_esq = None;
-    sup_dir = None;
-    inf_esq = None;
-    inf_dir = None;
+    sup_esq = (350,60);
+    sup_dir = (-350,60);
+    inf_esq = (350,-70);
+    inf_dir = (-350,-70);
     vitrine_larg_altu = None;
     comecar_leitura_unica = False;
 
@@ -77,7 +77,7 @@ def video_stream():
 
         if key == ord("r"):
             heatmap_usuario.reset_map();
-            # heatmap_global.reset_map()
+            heatmap_global.reset_map()
             print("[INFO] HeatMap resetaqdo!!");
 
         if key == ord("b"):
@@ -109,6 +109,18 @@ def video_stream():
             vitrine_larg_altu = None;
             print("[INFO] Calibração resetada!!");
 
+        if key == ord("p"):
+            print("[INFO] Sup Esquerda:");
+            print(sup_esq)
+            print("[INFO] Sup Direita:");
+            print(sup_dir)
+            print("[INFO] Inf Esquerda:");
+            print(inf_esq)
+            print("[INFO] Inf Direita:");
+            print(inf_dir)
+            print("[INFO] Largura ; Altura:");
+            print(vitrine_larg_altu)
+
         if key == ord("c"):
             if ( sup_esq != None and sup_dir != None and inf_esq != None and inf_dir != None):
                 vitrine_larg_altu = calibrar_vitrine(sup_esq, sup_dir, inf_esq, inf_dir);
@@ -135,11 +147,16 @@ def video_stream():
 
         if (None is not mapa):  # Encontrou alguns rostos
 
+            # for face in land_mark.shape:  # Loop pelos rostos encontrados
             for face in mapa:  # Loop pelos rostos encontrados
                 for (x, y) in face:
                     cv2.circle(frame, (int(x), int(y)), 2, (0, 0, 255), -1)
 
                 points = head_pose.get_line_points(face);
+
+                if( points == None ):
+                    continue;
+
                 cv2.arrowedLine(frame, points[0], points[1], (255, 0, 0), 2)
 
                 # Adicionar regra de tempo para saber a partir de quanto tempo começa a contar
@@ -182,6 +199,8 @@ def global2heat(ponto_zero, vitrine_points):
 
     if( vitrine_points[1] < ponto_zero[1] ):
         pontos_heat[1] = int(abs(ponto_zero[1] - vitrine_points[1]) / divisao_colum_row[1]);
+
+    # pontos_heat[1] = 7;
 
     return pontos_heat
 
