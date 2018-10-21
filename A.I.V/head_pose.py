@@ -13,6 +13,9 @@ import numpy as np
 
 class HeadPose():
 
+    RANGE_CABECA_FRENTE = 15
+    FATOR_INCREMENTO_CENTRO = 0.015
+
     @property
     def vitrine_points(self):
         return self.__vitrine_points
@@ -54,11 +57,23 @@ class HeadPose():
                                                                           self.camera_matrix, self.dist_coeffs,
                                                                           flags=cv2.SOLVEPNP_ITERATIVE)
 
+        # (success, rotation_vector, translation_vector, inliers) = self.cv.solvePnPRansac(self.model_points, image_points,
+        #                                                                   self.camera_matrix, self.dist_coeffs,
+        #                                                                     iterationsCount=10, reprojectionError=8,
+        #                                                                     confidence=0.9, flags=cv2.SOLVEPNP_ITERATIVE)
+
         if (not success):
             return None;
 
+        distance = abs(-0.5 * translation_vector[2]);
+
+        soma = self._cento(image_points);
+
+        if( self.RANGE_CABECA_FRENTE >= soma >= ( -self.RANGE_CABECA_FRENTE )  ):
+            rotation_vector[1] = soma * -self.FATOR_INCREMENTO_CENTRO;
+
         # We use this to draw a line sticking out of the nose
-        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, -0.5 * translation_vector[2])]),
+        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, distance)]),
                                                          rotation_vector,
                                                          translation_vector, self.camera_matrix, self.dist_coeffs)
 
@@ -66,10 +81,17 @@ class HeadPose():
         p2 = (int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
 
         self.__vitrine_points = ( p1[0] - p2[0], p1[1] - p2[1] );
-        print(self.__vitrine_points)
-        line_points = (p1, p2)
+
+        line_points = (p1, p2);
 
         return line_points;
+
+    def _cento(self, image_points):
+        nariz_x = image_points[0][0];
+        olho_dir_x = image_points[3][0];
+        olho_esq_x = image_points[2][0];
+
+        return (nariz_x - olho_esq_x) + (nariz_x - olho_dir_x);
 
 
 if (__name__ == '__main__'):
