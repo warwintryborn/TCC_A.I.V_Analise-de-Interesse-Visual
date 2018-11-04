@@ -17,7 +17,7 @@ import numpy as NP
 
 class HeatMap:
     __WIDTH = 9
-    __HIGHT = 6
+    __HIGHT = 9
     __VALOR_INCREMENTAL = 4
     __VALOR_INCREMENTAL_PERIFERIA = __VALOR_INCREMENTAL/2
     __HEATTYPE = 'jet'
@@ -135,7 +135,7 @@ class HeatMap:
         titulo_janela.canvas.set_window_title('Análise de Interesse Visual - Heatmap vitrine')
         PLT.axis('off');
         PLT.suptitle("A.I.V.", fontsize=32);
-        PLT.title(self.titulo, fontsize=12);
+        PLT.title(self.titulo, fontsize=16);
 
     def reset_map(self):
         self.__heatValue = NP.zeros((self.__HIGHT, self.__WIDTH))  # random.random((self.__HIGHT, self.__WIDTH))

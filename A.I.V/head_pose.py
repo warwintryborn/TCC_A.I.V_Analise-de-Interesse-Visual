@@ -13,7 +13,7 @@ import numpy as np
 
 class HeadPose():
 
-    RANGE_CABECA_FRENTE = 15
+    RANGE_CABECA_FRENTE = 3
     FATOR_INCREMENTO_CENTRO = 0.015
 
     @property
@@ -68,7 +68,8 @@ class HeadPose():
         distance = abs(-0.5 * translation_vector[2]);
 
         soma = self._cento(image_points);
-
+        # print("Soma: ");
+        # print(soma);
         if( self.RANGE_CABECA_FRENTE >= soma >= ( -self.RANGE_CABECA_FRENTE )  ):
             rotation_vector[1] = soma * -self.FATOR_INCREMENTO_CENTRO;
 
@@ -81,7 +82,7 @@ class HeadPose():
         p2 = (int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
 
         self.__vitrine_points = ( p1[0] - p2[0], p1[1] - p2[1] );
-
+        # print(self.vitrine_points)
         line_points = (p1, p2);
 
         return line_points;

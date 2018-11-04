@@ -42,15 +42,15 @@ def video_stream():
     # initialize the video stream and allow the cammera sensor to warmup
     global sup_esq, sup_dir, inf_esq, inf_dir, vitrine_larg_altu, divisao_colum_row, comecar_leitura_unica
 
-    sup_esq = (350,60);
-    sup_dir = (-350,60);
-    inf_esq = (350,-70);
-    inf_dir = (-350,-70);
+    sup_esq = (330,10);
+    sup_dir = (-330,10);
+    inf_esq = (330,-170);
+    inf_dir = (-330,-170);
     vitrine_larg_altu = None;
     comecar_leitura_unica = False;
 
     print("[INFO] Preparando a câmera...")
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
     set_resolution_480(cap)
 
@@ -58,8 +58,8 @@ def video_stream():
 
     land_mark = LandMark();
     head_pose = HeadPose(cv2);
-    heatmap_global = HeatMap("Diário");
-    heatmap_usuario = HeatMap("Usuário");
+    heatmap_global = HeatMap("Global");
+    heatmap_usuario = HeatMap("Instantaneo");
 
     # Loop de frames do video
     while True:
@@ -77,7 +77,7 @@ def video_stream():
 
         if key == ord("r"):
             heatmap_usuario.reset_map();
-            heatmap_global.reset_map()
+            # heatmap_global.reset_map()
             print("[INFO] HeatMap resetaqdo!!");
 
         if key == ord("b"):
@@ -145,7 +145,7 @@ def video_stream():
 
         primeiro_elemento = True;
 
-        if (None is not mapa):  # Encontrou alguns rostos
+        if (mapa.__len__() != 0):  # Encontrou alguns rostos
 
             # for face in land_mark.shape:  # Loop pelos rostos encontrados
             for face in mapa:  # Loop pelos rostos encontrados
@@ -169,6 +169,8 @@ def video_stream():
                         if ( primeiro_elemento and comecar_leitura_unica ):
                             primeiro_elemento = False;
                             heatmap_usuario.incrementa(coordenada_heat);
+        else:
+            heatmap_usuario.reset_map();
 
         # show the frame
         cv2.imshow("Frame", frame)
